@@ -1,0 +1,46 @@
+{
+  "name": "@01protocol/mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for 01 Protocol — AI agent identity tools for Claude Desktop and MCP-compatible apps",
+  "type": "module",
+  "bin": {
+    "01protocol-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai-agent",
+    "identity",
+    "01-protocol",
+    "claude"
+  ],
+  "author": "01AI.ai <info@01ai.ai>",
+  "license": "MIT",
+  "homepage": "https://01ai.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/01ai-Admin/01-protocol"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@01protocol/sdk": "^0.1.0",
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "@01protocol/sdk",
+  "version": "0.1.0",
+  "description": "Official SDK for the 01 Protocol — portable, cryptographically verifiable AI agent identity",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+  },
+  "keywords": [
+    "ai-agent",
+    "identity",
+    "01-protocol",
+    "ed25519",
+    "cryptography",
+    "portable",
+    "agent-identity",
+    "open-standard"
+  ],
+  "author": "01AI.ai <info@01ai.ai>",
+  "license": "MIT",
+  "homepage": "https://01ai.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/01ai-Admin/01-protocol"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.4.0",
+    "@noble/hashes": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

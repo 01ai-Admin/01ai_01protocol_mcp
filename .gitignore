@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.js.map
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+*.env
+.DS_Store
