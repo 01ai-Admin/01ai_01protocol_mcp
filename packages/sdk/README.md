@@ -8,6 +8,11 @@ Official JavaScript/TypeScript SDK for the [01 Protocol](https://01ai.ai) — po
 npm install @01protocol/sdk
 ```
 
+> **Note:** Until the npm package is published, install directly from GitHub:
+> ```bash
+> npm install github:01ai-Admin/01ai_01protocol_mcp#v0.1.0
+> ```
+
 ## Quick Start
 
 ```typescript
@@ -88,7 +93,7 @@ const updatedAgent = resignAgent(agent, privateKeyHex, { memoryMerkleRoot: merkl
 
 - [01AI.ai](https://01ai.ai) — Main site
 - [app.01ai.ai](https://app.01ai.ai) — Web app
-- [GitHub](https://github.com/01ai-Admin/01-protocol) — Spec and source
+- [GitHub](https://github.com/01ai-Admin/01ai_01protocol_mcp) — Spec and source
 - [Developers](https://01ai.ai/developers) — Full documentation
 
 ## License
