@@ -113,7 +113,7 @@ create-agent verify agent.01ai
 
 - [01AI.ai](https://01ai.ai)
 - [app.01ai.ai](https://app.01ai.ai)
-- [GitHub](https://github.com/01ai-Admin/01-protocol)
+- [GitHub](https://github.com/01ai-Admin/01ai_01protocol_mcp)
 
 ## License
 

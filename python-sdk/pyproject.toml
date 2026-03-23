@@ -28,7 +28,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://01ai.ai"
-Repository = "https://github.com/01ai-Admin/01-protocol"
+Repository = "https://github.com/01ai-Admin/01ai_01protocol_mcp"
 Documentation = "https://01ai.ai/developers"
 
 [project.scripts]

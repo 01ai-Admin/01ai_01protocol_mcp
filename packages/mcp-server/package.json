@@ -25,7 +25,7 @@
   "homepage": "https://01ai.ai",
   "repository": {
     "type": "git",
-    "url": "https://github.com/01ai-Admin/01-protocol"
+    "url": "https://github.com/01ai-Admin/01ai_01protocol_mcp"
   },
   "files": [
     "dist",
@@ -33,7 +33,7 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@01protocol/sdk": "^0.1.0",
+    "@01protocol/sdk": "file:../sdk",
     "@modelcontextprotocol/sdk": "^1.0.0"
   },
   "devDependencies": {
