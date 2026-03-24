@@ -1,0 +1,134 @@
+{
+  "name": "01protocol",
+  "displayName": "01 Protocol — Agent Identity",
+  "description": "Mint, verify, and manage cryptographic AI agent identities on the 01 Protocol standard.",
+  "version": "0.1.0",
+  "publisher": "01ai",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other", "AI"],
+  "keywords": ["ai", "agent", "identity", "01protocol", "cryptography", "aria"],
+  "icon": "images/icon.png",
+  "license": "MIT",
+  "homepage": "https://01ai.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/01ai-Admin/01ai_01protocol_mcp"
+  },
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "01protocol.createAgent",
+        "title": "01 Protocol: Create Agent",
+        "icon": "$(add)"
+      },
+      {
+        "command": "01protocol.verifyAgent",
+        "title": "01 Protocol: Verify Agent File",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "01protocol.viewAgent",
+        "title": "01 Protocol: View Agent Details"
+      },
+      {
+        "command": "01protocol.addMemory",
+        "title": "01 Protocol: Add Memory Entry"
+      },
+      {
+        "command": "01protocol.signOutput",
+        "title": "01 Protocol: Sign Selected Text"
+      },
+      {
+        "command": "01protocol.refreshAgents",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "01protocol.openSettings",
+        "title": "01 Protocol: Open Settings"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "01protocolAgents",
+          "name": "01 Protocol Agents",
+          "icon": "$(account)",
+          "contextualTitle": "01 Protocol"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "01protocol.createAgent",
+          "when": "view == 01protocolAgents",
+          "group": "navigation"
+        },
+        {
+          "command": "01protocol.refreshAgents",
+          "when": "view == 01protocolAgents",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "01protocol.viewAgent",
+          "when": "view == 01protocolAgents && viewItem == agent",
+          "group": "inline"
+        },
+        {
+          "command": "01protocol.addMemory",
+          "when": "view == 01protocolAgents && viewItem == agent"
+        },
+        {
+          "command": "01protocol.verifyAgent",
+          "when": "view == 01protocolAgents && viewItem == agent"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "01protocol.signOutput",
+          "when": "editorHasSelection",
+          "group": "01protocol"
+        },
+        {
+          "command": "01protocol.verifyAgent",
+          "when": "resourceExtname == .01ai || resourceExtname == .01bundle",
+          "group": "01protocol"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "01 Protocol",
+      "properties": {
+        "01protocol.vaultDir": {
+          "type": "string",
+          "default": "",
+          "description": "Path to your agent vault directory. Defaults to ~/.01protocol/agents"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "dev": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --sourcemap --watch",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "@01protocol/sdk": "file:../sdk"
+  }
+}

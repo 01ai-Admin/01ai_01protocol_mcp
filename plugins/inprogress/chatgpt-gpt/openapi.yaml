@@ -1,0 +1,149 @@
+openapi: 3.1.0
+info:
+  title: 01 Protocol API
+  description: Create, verify, and view AI agent identities on the 01 Protocol standard.
+  version: 0.1.0
+servers:
+  - url: https://api.01ai.ai
+    description: 01 Protocol API (update this URL after deployment)
+paths:
+  /agents/create:
+    post:
+      operationId: createAgent
+      summary: Create a new 01 Protocol agent identity
+      description: >
+        Generates a new cryptographic AI agent identity using Ed25519 keypairs.
+        Returns the agent identity file and private key. Nothing is stored server-side.
+        The caller must save the private key — it cannot be recovered.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, role, goal]
+              properties:
+                name:
+                  type: string
+                  description: Agent name (e.g. "Sales Analyst")
+                role:
+                  type: string
+                  description: Agent role (e.g. "Data Analyst")
+                goal:
+                  type: string
+                  description: Agent primary goal or purpose
+                include_memory:
+                  type: boolean
+                  default: false
+                  description: Include a starter memory vault (produces .01bundle instead of .01ai)
+                serial_number:
+                  type: integer
+                  default: 1
+                  description: Edition serial number
+                total_supply:
+                  type: integer
+                  default: 1
+                  description: Total supply for this agent type
+      responses:
+        "200":
+          description: Agent created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agent:
+                    type: object
+                    description: The full agent identity record
+                  private_key_hex:
+                    type: string
+                    description: Ed25519 private key hex — shown once, save immediately
+                  file_extension:
+                    type: string
+                    description: ".01ai or .01bundle"
+                  file_content:
+                    type: string
+                    description: Full file content ready to save
+                  warning:
+                    type: string
+        "400":
+          description: Missing or invalid fields
+
+  /agents/verify:
+    post:
+      operationId: verifyAgent
+      summary: Verify the cryptographic integrity of a 01 Protocol agent
+      description: >
+        Checks the Ed25519 signature on a .01ai or .01bundle file.
+        Returns whether the identity is valid, tampered, or malformed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [agent_json]
+              properties:
+                agent_json:
+                  type: string
+                  description: Raw JSON content of the .01ai or .01bundle file
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  error:
+                    type: string
+                    nullable: true
+                  warnings:
+                    type: array
+                    items:
+                      type: string
+                  agent:
+                    type: object
+                    nullable: true
+                    description: Parsed agent identity if valid
+        "400":
+          description: Missing agent_json
+
+  /agents/view:
+    post:
+      operationId: viewAgent
+      summary: Parse and display structured details from a 01 Protocol agent file
+      description: >
+        Parses a .01ai or .01bundle file and returns structured identity
+        and memory vault details. Does not verify the signature — use /agents/verify for that.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [agent_json]
+              properties:
+                agent_json:
+                  type: string
+                  description: Raw JSON content of the .01ai or .01bundle file
+      responses:
+        "200":
+          description: Parsed agent details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  format:
+                    type: string
+                    description: ".01ai or .01bundle"
+                  identity:
+                    type: object
+                  memory_vault:
+                    type: object
+                    nullable: true
+        "400":
+          description: Missing or invalid agent_json

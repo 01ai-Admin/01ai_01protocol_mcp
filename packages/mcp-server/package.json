@@ -1,10 +1,10 @@
 {
-  "name": "@01protocol/mcp-server",
+  "name": "@01ai-admin/mcp-server",
   "version": "0.1.0",
   "description": "MCP server for 01 Protocol — AI agent identity tools for Claude Desktop and MCP-compatible apps",
   "type": "module",
   "bin": {
-    "01protocol-mcp": "./dist/index.js"
+    "01protocol-mcp": "dist/index.js"
   },
   "main": "./dist/index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   "homepage": "https://01ai.ai",
   "repository": {
     "type": "git",
-    "url": "https://github.com/01ai-Admin/01ai_01protocol_mcp"
+    "url": "git+https://github.com/01ai-Admin/01ai_01protocol_mcp.git"
   },
   "files": [
     "dist",
@@ -42,5 +42,8 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
