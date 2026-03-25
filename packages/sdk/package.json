@@ -36,7 +36,7 @@
   "homepage": "https://01ai.ai",
   "repository": {
     "type": "git",
-    "url": "https://github.com/01ai-Admin/01ai_01protocol_mcp"
+    "url": "git+https://github.com/01ai-Admin/01ai_01protocol_mcp.git"
   },
   "dependencies": {
     "@noble/curves": "^1.4.0",

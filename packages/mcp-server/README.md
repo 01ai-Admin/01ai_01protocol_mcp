@@ -22,21 +22,6 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-> **Until npm publish:** Clone the repo and point directly to the built file:
-> ```json
-> {
->   "mcpServers": {
->     "01protocol": {
->       "command": "node",
->       "args": ["/path/to/01ai_01protocol_mcp/packages/mcp-server/dist/index.js"],
->       "env": {
->         "AGENT_VAULT_DIR": "/Users/you/.01protocol/agents"
->       }
->     }
->   }
-> }
-> ```
-
 **Config file locations:**
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%\Claude\claude_desktop_config.json`

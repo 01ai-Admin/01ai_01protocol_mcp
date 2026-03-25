@@ -10,49 +10,37 @@ This repository contains the canonical public distribution packages for 01 Proto
 - `@01protocol/mcp-server` (`packages/mcp-server`): MCP server exposing agent identity tools to Claude Desktop and other MCP clients.
 - `protocol-01` (`python-sdk`): Python SDK.
 
-## Current Install Status
-
-- npm packages: not published yet
-- PyPI package: publish in progress
-- Local monorepo usage: supported now
-
-## Local Quick Start
-
-1. Install dependencies from repo root:
+## Install
 
 ```bash
-npm install
+# SDK
+npm install @01protocol/sdk
+
+# MCP server (Claude Desktop / any MCP client)
+npx @01protocol/mcp-server
 ```
 
-2. Build all workspace packages:
+## MCP Quick Start
 
-```bash
-npm run build
-```
-
-3. Use SDK locally in another project:
-
-```bash
-npm install /absolute/path/to/01protocol/packages/sdk
-```
-
-## MCP Quick Start (Local)
-
-Build the MCP package, then point Claude Desktop to the built entrypoint.
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "01protocol": {
-      "command": "node",
-      "args": ["/absolute/path/to/01protocol/packages/mcp-server/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@01protocol/mcp-server"],
       "env": {
-        "AGENT_VAULT_DIR": "/absolute/path/to/agent-vault"
+        "AGENT_VAULT_DIR": "/Users/you/.01protocol/agents"
       }
     }
   }
 }
 ```
+
+Config file locations:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ## Specs and Docs
 

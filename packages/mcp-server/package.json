@@ -1,5 +1,5 @@
 {
-  "name": "@01ai-admin/mcp-server",
+  "name": "@01protocol/mcp-server",
   "version": "0.1.0",
   "description": "MCP server for 01 Protocol — AI agent identity tools for Claude Desktop and MCP-compatible apps",
   "type": "module",
@@ -33,7 +33,7 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@01protocol/sdk": "file:../sdk",
+    "@01protocol/sdk": "^0.1.0",
     "@modelcontextprotocol/sdk": "^1.0.0"
   },
   "devDependencies": {
@@ -42,8 +42,5 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
