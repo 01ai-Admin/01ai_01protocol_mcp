@@ -1,6 +1,6 @@
 {
   "name": "@01protocol/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Official SDK for the 01 Protocol — portable, cryptographically verifiable AI agent identity",
   "type": "module",
   "main": "./dist/index.js",

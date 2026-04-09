@@ -13,7 +13,23 @@ export interface AgentId {
   createdAt: string;
   updatedAt: string;
   platformProfiles?: PlatformProfile[];
+  pedigree?: PedigreeBlock;
   [key: string]: unknown;
+}
+
+export interface PedigreeBlock {
+  schema_version: string;
+  generation: number;
+  parent_ids: string[];
+  trait_chromosome: Record<string, number>;
+  composite_score: number;
+  suite_name: string;
+  suite_hash: string;
+  dominant_from: Record<string, string>;
+  evaluated_at: number;
+  pedigree_hash: string;
+  pedigree_sig: string;
+  signed_by?: string;
 }
 
 export interface PlatformProfile {
@@ -28,12 +44,13 @@ export interface MemoryEntry {
   vaultId: string;
   instanceId: string;
   layer: "operational-cache" | "persistent-vault";
-  type: "summary" | "task-context" | "project-history" | "decision" | "achievement" | "learning" | "note";
+  type: "summary" | "task-context" | "project-history" | "decision" | "achievement" | "learning" | "note" | "pedigree_genesis";
   summary: string;
   fingerprint: string;
   tags: string[];
   createdAt: string;
   updatedAt: string;
+  signed?: boolean;
 }
 
 export interface AgentMemoryVault {
@@ -101,3 +118,30 @@ export interface ConsentPolicy {
   deny: string[];
   escalate: string[];
 }
+
+export type PedigreeVerificationResult =
+  | {
+      valid: true;
+      agent_id: string;
+      generation: number;
+      genesis?: boolean;
+      parent_ids?: string[];
+      composite_score?: number;
+      dominant_traits?: Array<[string, number]>;
+      weak_traits?: Array<[string, number]>;
+      pedigree_hash?: string;
+      sig_verified?: boolean;
+      notes: string[];
+    }
+  | {
+      valid: false;
+      agent_id: string;
+      generation: number;
+      parent_ids: string[];
+      composite_score: number;
+      dominant_traits: Array<[string, number]>;
+      weak_traits: Array<[string, number]>;
+      pedigree_hash?: string;
+      sig_verified: boolean;
+      notes: string[];
+    };

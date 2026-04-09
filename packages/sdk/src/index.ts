@@ -1,8 +1,9 @@
 export { createAgent, resignAgent, serializeAgent, signOutput } from "./agent.js";
 export { verifyFromText, verifyAgentRecord } from "./verify.js";
-export { createStarterMemoryVault, addMemoryEntry, computeVaultMerkleRoot, createPortableBundle } from "./memory.js";
+export { createStarterMemoryVault, addMemoryEntry, computeVaultMerkleRoot, createPortableBundle, ensurePedigreeGenesisEntry } from "./memory.js";
 export { parseGuarded, LIMITS } from "./guard.js";
 export { bytesToHex, hexToBytes, computeSignedDigest, hashText } from "./crypto.js";
+export { PedigreeRecord, canonicalPedigreePayload, createPedigree, verifyPedigree, showLineage, pedigreeGenesisSummary } from "./pedigree.js";
 export {
   createDelegationToken,
   verifyDelegationToken,
@@ -19,6 +20,7 @@ export {
 export type { ConsentDecision, ConsentAuditEntry, GuardedWriteResult } from "./consent.js";
 export type {
   AgentId,
+  PedigreeBlock,
   PlatformProfile,
   MemoryEntry,
   AgentMemoryVault,
@@ -28,4 +30,5 @@ export type {
   VerifyResult,
   SignedOutput,
   ConsentPolicy,
+  PedigreeVerificationResult,
 } from "./types.js";

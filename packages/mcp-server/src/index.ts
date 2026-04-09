@@ -25,6 +25,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import type { MemoryEntry } from "@01protocol/sdk";
 import {
   createAgent,
@@ -35,10 +36,14 @@ import {
   createPortableBundle,
   createStarterMemoryVault,
   signOutput,
+  createPedigree,
+  showLineage,
+  verifyPedigree,
 } from "@01protocol/sdk";
 import type { AgentId, AgentMemoryVault, PortableBundle } from "@01protocol/sdk";
 
-const VAULT_DIR = process.env["AGENT_VAULT_DIR"] ?? path.join(process.env["HOME"] ?? ".", ".01protocol", "agents");
+const DEFAULT_VAULT_DIR = path.join(os.homedir(), ".01protocol", "agents");
+const VAULT_DIR = path.resolve(process.env["AGENT_VAULT_DIR"] ?? DEFAULT_VAULT_DIR);
 
 function ensureVaultDir(): void {
   if (!fs.existsSync(VAULT_DIR)) {
@@ -148,6 +153,49 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           layer: { type: "string", enum: ["operational-cache", "persistent-vault"], default: "persistent-vault" },
         },
         required: ["name_or_id", "private_key_hex", "summary"],
+      },
+    },
+    {
+      name: "create_pedigree",
+      description: "Create and attach a pedigree block for a bred agent identity.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          child_agent_path: { type: "string", description: "Path to the child .01ai or .01bundle file" },
+          child_agent_id: { type: "string", description: "Child agent instance ID" },
+          parent_a_path: { type: "string", description: "Path to parent A identity file" },
+          parent_b_path: { type: "string", description: "Path to parent B identity file" },
+          crossover_result: { type: "object", description: "Output from HeredityEngine.crossover()" },
+          suite_name: { type: "string" },
+          suite_hash: { type: "string" },
+          evaluated_at: { type: "number" },
+          signing_private_key_hex: { type: "string", description: "Private key hex for the selected signing parent" },
+        },
+        required: ["child_agent_path", "child_agent_id", "parent_a_path", "parent_b_path", "crossover_result", "suite_name", "suite_hash", "evaluated_at", "signing_private_key_hex"],
+      },
+    },
+    {
+      name: "verify_pedigree",
+      description: "Verify an agent pedigree block independently of the main agent identity signature.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          agent_path: { type: "string", description: "Path to a .01ai or .01bundle file" },
+        },
+        required: ["agent_path"],
+      },
+    },
+    {
+      name: "show_lineage",
+      description: "Show a recursive lineage tree for an agent pedigree.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          agent_path: { type: "string", description: "Path to a .01ai or .01bundle file" },
+          depth: { type: "number", default: 3 },
+          agent_store: { type: "string", description: "Directory containing related agent identities" },
+        },
+        required: ["agent_path"],
       },
     },
     {
@@ -373,7 +421,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         type: (args["type"] as MemoryEntry["type"]) ?? "note",
         summary: String(args["summary"]),
         tags: Array.isArray(args["tags"]) ? (args["tags"] as unknown[]).map(String) : [],
-      });
+      }, agent);
 
       const merkleRoot = computeVaultMerkleRoot(updatedVault);
       agent = resignAgent(agent, privateKeyHex, { memoryMerkleRoot: merkleRoot });
@@ -395,9 +443,58 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             `**Entry:** ${args["summary"]}`,
             `**Type:** ${args["type"] ?? "note"}`,
             `**New Merkle Root:** \`${merkleRoot}\``,
-            `**Total Entries:** ${updatedVault.memoryStats.totalEntries + 1}`,
+            `**Total Entries:** ${updatedVault.memoryStats.totalEntries}`,
             `**Saved to:** \`${newPath}\``,
           ].join("\n"),
+        }],
+      };
+    }
+
+    if (name === "create_pedigree") {
+      const result = createPedigree({
+        childAgentPath: String(args["child_agent_path"]),
+        parentAPath: String(args["parent_a_path"]),
+        parentBPath: String(args["parent_b_path"]),
+        crossoverResult: args["crossover_result"] as Record<string, unknown>,
+        suiteName: String(args["suite_name"]),
+        suiteHash: String(args["suite_hash"]),
+        evaluatedAt: Number(args["evaluated_at"]),
+        signingPrivateKeyHex: String(args["signing_private_key_hex"]),
+      });
+
+      return {
+        content: [{
+          type: "text",
+          text: [
+            `Pedigree created for child agent \`${String(args["child_agent_id"])}\``,
+            `Agent path: \`${result.agentPath}\``,
+            `Pedigree hash: \`${result.pedigreeHash}\``,
+            `Signed by: \`${result.signedBy}\``,
+          ].join("\n"),
+        }],
+      };
+    }
+
+    if (name === "verify_pedigree") {
+      const result = verifyPedigree(String(args["agent_path"]), [], VAULT_DIR);
+      return {
+        content: [{
+          type: "text",
+          text: `\`\`\`json\n${JSON.stringify(result, null, 2)}\n\`\`\``,
+        }],
+      };
+    }
+
+    if (name === "show_lineage") {
+      const lineage = showLineage(
+        String(args["agent_path"]),
+        typeof args["depth"] === "number" ? args["depth"] : 3,
+        typeof args["agent_store"] === "string" ? String(args["agent_store"]) : VAULT_DIR,
+      );
+      return {
+        content: [{
+          type: "text",
+          text: `\`\`\`json\n${JSON.stringify(lineage, null, 2)}\n\`\`\``,
         }],
       };
     }

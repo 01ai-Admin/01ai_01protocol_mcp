@@ -1,4 +1,5 @@
 import { hashText, generateId } from "./crypto.js";
+import { pedigreeGenesisSummary } from "./pedigree.js";
 import type { AgentId, AgentMemoryVault, MemoryEntry, PortableBundle } from "./types.js";
 
 export function createStarterMemoryVault(agent: AgentId): AgentMemoryVault {
@@ -34,8 +35,10 @@ export function createStarterMemoryVault(agent: AgentId): AgentMemoryVault {
 
 export function addMemoryEntry(
   vault: AgentMemoryVault,
-  entry: Omit<MemoryEntry, "entryId" | "vaultId" | "fingerprint" | "createdAt" | "updatedAt">
+  entry: Omit<MemoryEntry, "entryId" | "vaultId" | "fingerprint" | "createdAt" | "updatedAt">,
+  agent?: AgentId,
 ): AgentMemoryVault {
+  vault = ensurePedigreeGenesisEntry(vault, agent);
   const now = new Date().toISOString();
   const newEntry: MemoryEntry = {
     ...entry,
@@ -51,6 +54,36 @@ export function addMemoryEntry(
     ...vault,
     persistentEntries: isVerified ? [...vault.persistentEntries, newEntry] : vault.persistentEntries,
     operationalCache: !isVerified ? [...vault.operationalCache, newEntry] : vault.operationalCache,
+    memoryStats: {
+      ...vault.memoryStats,
+      totalEntries: vault.memoryStats.totalEntries + 1,
+    },
+    updatedAt: now,
+  };
+}
+
+export function ensurePedigreeGenesisEntry(vault: AgentMemoryVault, agent?: AgentId): AgentMemoryVault {
+  if (!agent?.pedigree) return vault;
+  if (vault.persistentEntries.some((entry) => entry.type === "pedigree_genesis")) return vault;
+  const summary = pedigreeGenesisSummary(agent);
+  if (!summary) return vault;
+  const now = new Date().toISOString();
+  const pedigreeEntry: MemoryEntry = {
+    entryId: generateId("mem"),
+    vaultId: vault.vaultId,
+    instanceId: vault.instanceId,
+    layer: "persistent-vault",
+    type: "pedigree_genesis",
+    summary,
+    fingerprint: hashText(summary),
+    tags: ["pedigree", "genesis", "system"],
+    signed: true,
+    createdAt: now,
+    updatedAt: now,
+  };
+  return {
+    ...vault,
+    persistentEntries: [pedigreeEntry, ...vault.persistentEntries],
     memoryStats: {
       ...vault.memoryStats,
       totalEntries: vault.memoryStats.totalEntries + 1,

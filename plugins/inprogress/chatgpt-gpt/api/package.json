@@ -10,7 +10,7 @@
     "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
-    "@01protocol/sdk": "file:../../packages/sdk",
+    "@01protocol/sdk": "^0.2.0",
     "express": "^4.21.2",
     "cors": "^2.8.5"
   },

@@ -89,7 +89,7 @@ app.post("/agents/verify", (req, res) => {
 
   res.json({
     valid: result.valid,
-    error: result.error ?? null,
+    error: result.valid ? null : result.error,
     warnings: result.warnings,
     agent: result.agent ?? null,
   });
